@@ -36,15 +36,15 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
             return;
         }
 
-        var env = req.params.repository;
+        var repo = req.params.repository;
 
-        if(config.env.indexOf(req.params.repository) === -1) {
-            console.log(data.owner + ' is not a repository that we need to update');
+        if(config.env[repo] == undefined) {
+            console.log(data.owner + 'Update repository not found');
             if (typeof cb === 'function') cb();
             return;
         }
 
-        var source = config.global['env'];
+        var source = config.env[repo];
 
         // End early if not permitted branch
         if (data.branch !== branch) {
