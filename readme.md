@@ -5,7 +5,7 @@ This is the fork of jekyll-hook, to meet the needs of crossraods milacron projec
 
 Following changes has been made to this repository to meet the needs 
 
-1 . We now use only one script to do every thing instead of using one for pusblish and one to pull . 
+1 . We now use only one script to do every thing instead of using one for publish and one to pull . 
 2 . We added new config entries to meet our folder structure  . 
 3 . We made the default port number to 4000 since we wanted it to run in this port . 
 
