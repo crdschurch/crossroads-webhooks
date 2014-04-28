@@ -14,13 +14,13 @@ app.use(express.bodyParser());
 
 // Receive webhook post
 app.post('/hooks/jekyll/milacron', function(req, res) {
-
+    
     // Close connection
     res.send(202);
 
     // Queue request handler
     tasks.defer(function(req, res, cb) {
-        var data = JSON.parse(req.body);
+        var data = req.body;
         var branch = 'master';
         var params = [];
 
