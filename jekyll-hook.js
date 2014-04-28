@@ -73,7 +73,7 @@ app.post('/hooks/jekyll/milacron', function(req, res) {
 });
 
 // Start server
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 4000;
 app.listen(port);
 console.log('Listening on port ' + port);
 
