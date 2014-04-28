@@ -20,7 +20,7 @@ app.post('/hooks/jekyll/milacron', function(req, res) {
 
     // Queue request handler
     tasks.defer(function(req, res, cb) {
-        var data = JSON.parse(req.body.payload);
+        var data = JSON.parse(req.body);
         var branch = 'master';
         var params = [];
 
