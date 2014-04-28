@@ -13,7 +13,7 @@ var mailer  = email.server.connect(config.email);
 app.use(express.bodyParser());
 
 // Receive webhook post
-app.post('/hooks/jekyll/milacron', function(req, res) {
+app.post('/hooks/jekyll/:repository', function(req, res) {
     
     // Close connection
     res.send(202);
@@ -36,6 +36,16 @@ app.post('/hooks/jekyll/milacron', function(req, res) {
             return;
         }
 
+        var env = req.params.repository;
+
+        if(config.env.indexOf(req.params.repository) === -1) {
+            console.log(data.owner + ' is not a repository that we need to update');
+            if (typeof cb === 'function') cb();
+            return;
+        }
+
+        var source = config.global['env'];
+
         // End early if not permitted branch
         if (data.branch !== branch) {
             console.log('Not ' + branch + ' branch.');
@@ -48,7 +58,7 @@ app.post('/hooks/jekyll/milacron', function(req, res) {
         /* branch */ params.push(data.branch);
         /* owner  */ params.push(data.owner);
         /* giturl */ params.push('git@' + config.gh_server + ':' + data.owner + '/' + data.repo + '.git');
-        /* source */ params.push(config.source);
+        /* source */ params.push(source);
 
         // Run build script
         run(config.scripts.build, params, function(err) {

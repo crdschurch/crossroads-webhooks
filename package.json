@@ -1,18 +1,18 @@
 {
     "name": "jekyll-hook",
     "description": "A server that listens for GitHub webhook posts and renders a Jekyll site",
-    "homepage": "http://github.com/developmentseed/jekyll-hook",
+    "homepage": "http://github.com/crdschurch/crossroads-webhooks",
     "author": {
-        "name": "Development Seed",
-        "url": "http://developmentseed.org/",
-        "email": "info@developmentseed.org"
+        "name": "Crossroads Webhooks",
+        "url": "http://crossroads.net/",
+        "email": "aravind.udayashankara@gmail.com"
     },
     "contributors": [
-        "Dave Cole <dave@developmentseed.org>"
+        "Aravind Udayashankara <aravind.udayashankara@gmail.com>"
     ],
     "repository": {
         "type": "git",
-        "url": "git://github.com/developmentseed/jekyll-hook.git"
+        "url": "https://github.com/crdschurch/crossroads-webhooks.git"
     },
     "version": "0.1.0",
     "dependencies": {

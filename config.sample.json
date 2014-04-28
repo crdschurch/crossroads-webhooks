@@ -1,18 +1,19 @@
 {
     "gh_server": "github.com",
-    "temp": "/home/ubuntu/jekyll-hook",
+    "env" : {
+        "repo1" : "/var/www/path_to_repo1_where_you_have_hosted" ,
+        "repo2" : "/var/www/path_to_repo2_wheere_you_have_hosted"
+    },
     "scripts": {
-        "build": "./scripts/build.sh",
-        "publish": "./scripts/publish.sh"
+        "build": "./scripts/build.sh"
     },
     "email": {
-        "user": "", 
-        "password": "", 
-        "host": "", 
+        "user": "",
+        "password": "",
+        "host": "",
         "ssl": true
     },
     "accounts": [
-        "developmentseed",
-        "mapbox"
+        "your github organization name"
     ]
 }
