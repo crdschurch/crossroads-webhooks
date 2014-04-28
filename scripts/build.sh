@@ -12,11 +12,6 @@ giturl=$4
 source=$5
 build=$6
 
-# Check to see if repo exists. If not, git clone it
-if [ ! -d $source ]; then
-    git clone $giturl $source
-fi
-
 # Git checkout appropriate branch, pull latest code
 cd $source
 git checkout $branch
@@ -25,5 +20,5 @@ cd -
 
 # Run jekyll
 cd $source
-jekyll $source $build --no-server --no-auto
+jekyll build
 cd -

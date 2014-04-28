@@ -13,7 +13,7 @@ var mailer  = email.server.connect(config.email);
 app.use(express.bodyParser());
 
 // Receive webhook post
-app.post('/hooks/jekyll/:branch', function(req, res) {
+app.post('/hooks/jekyll/milacron', function(req, res) {
 
     // Close connection
     res.send(202);
@@ -21,7 +21,7 @@ app.post('/hooks/jekyll/:branch', function(req, res) {
     // Queue request handler
     tasks.defer(function(req, res, cb) {
         var data = JSON.parse(req.body.payload);
-        var branch = req.params.branch;
+        var branch = 'master';
         var params = [];
 
         // Parse webhook data for internal variables
@@ -48,8 +48,7 @@ app.post('/hooks/jekyll/:branch', function(req, res) {
         /* branch */ params.push(data.branch);
         /* owner  */ params.push(data.owner);
         /* giturl */ params.push('git@' + config.gh_server + ':' + data.owner + '/' + data.repo + '.git');
-        /* source */ params.push(config.temp + '/' + data.owner + '/' + data.repo + '/' + data.branch + '/' + 'code');
-        /* build  */ params.push(config.temp + '/' + data.owner + '/' + data.repo + '/' + data.branch + '/' + 'site');
+        /* source */ params.push(config.source);
 
         // Run build script
         run(config.scripts.build, params, function(err) {
@@ -61,23 +60,13 @@ app.post('/hooks/jekyll/:branch', function(req, res) {
                 return;
             }
 
-            // Run publish script
-            run(config.scripts.publish, params, function(err) {
-                if (err) {
-                    console.log('Failed to publish: ' + data.owner + '/' + data.repo);
-                    send('Your website at ' + data.owner + '/' + data.repo + ' failed to publish.', 'Error publishing site', data);
+            // Done running scripts
+            console.log('Successfully rendered: ' + data.owner + '/' + data.repo);
+            send('Your website at ' + data.owner + '/' + data.repo + ' was succesfully published.', 'Succesfully published site', data);
 
-                    if (typeof cb === 'function') cb();
-                    return;
-                }
+            if (typeof cb === 'function') cb();
+            return;
 
-                // Done running scripts
-                console.log('Successfully rendered: ' + data.owner + '/' + data.repo);
-                send('Your website at ' + data.owner + '/' + data.repo + ' was succesfully published.', 'Succesfully published site', data);
-
-                if (typeof cb === 'function') cb();
-                return;
-            });
         });
     }, req, res);
 
