@@ -1,11 +1,11 @@
 {
     "gh_server": "github.com",
     "env" : {
-        "milacron" : "/var/www/milacron" ,
+        "milacron" : "/var/www/milacron",
         "labs": "/var/www/labs"
     },
     "scripts": {
-        "build": "./scripts/build.sh",
+        "build": "./scripts/build.sh"
     },
     "email": {
 	"user": "cradmin@crossroads.net",
@@ -17,6 +17,6 @@
         "authentication":"login"
     },
     "accounts": [
-        "crdschurch",
+        "crdschurch"
     ]
 }
