@@ -7,8 +7,10 @@ var app     = express();
 var queue   = require('queue-async');
 var tasks   = queue(1);
 var spawn   = require('child_process').spawn;
-var email   = require('emailjs/email');
-var mailer  = email.server.connect(config.email);
+var mandrillMailer = require('mailer'),
+        username = config.email.user,
+        password = config.email.password;
+
 
 app.use(express.bodyParser());
 
@@ -64,7 +66,7 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
         run(config.scripts.build, params, function(err) {
             if (err) {
                 console.log('Failed to build: ' + data.owner + '/' + data.repo);
-                send('Your website at ' + data.owner + '/' + data.repo + ' failed to build.', 'Error building site', data);
+                send('Your website at ' + data.owner + '/' + data.repo + ' failed to build. There was a local change on the server that was overwritten in the latest deploy. You may need to investigate this change.', data.repo + ' - Error building site', data);
 
                 if (typeof cb === 'function') cb();
                 return;
@@ -72,7 +74,7 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
 
             // Done running scripts
             console.log('Successfully rendered: ' + data.owner + '/' + data.repo);
-            send('Your website at ' + data.owner + '/' + data.repo + ' was succesfully published.', 'Succesfully published site', data);
+            send('Your website at ' + data.owner + '/' + data.repo + ' was succesfully published.', data.repo + ' - Succesfully published', data);
 
             if (typeof cb === 'function') cb();
             return;
@@ -105,12 +107,23 @@ function run(file, params, cb) {
 
 function send(body, subject, data) {
     if (config.email && data.pusher.email) {
-        var message = {
-            text: body,
-            from: config.email.user,
-            to: data.pusher.email,
-            subject: subject
+	 var message = {
+                host: config.email.host,
+                port: config.email.port,
+                to: data.pusher.email,
+                from: config.email.from,
+                subject: subject,
+                html: body,
+                authentication: config.email.authentication,
+                username: username,
+                password: password
         };
-        mailer.send(message, function(err) { if (err) console.warn(err); });
+        mandrillMailer.send(message
+                , function (err, result){
+                        if(err) {
+                                console.warn(err);
+                        }
+                }
+                );
     }
 }
