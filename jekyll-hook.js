@@ -67,9 +67,9 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
 	// Run inspect jekyll script which check jekyll build failures, which doesn't allow to pull unless it is resolved.
 	runjekyll(config.scripts.inspect, params, function(err){
 		var resultant = err.split('$$'); // used to get the status code.
-		if (result[1] === '1') {
+		if (resultant[1] === '1') {
                     console.log('Failed to build: ' + data.owner + '/' + data.repo);
-	            send('Your website at ' + data.owner + '/' + data.repo + ' failed to build :--' + result[2], data.repo + ' - Error building site', data);
+	            send('Your website at ' + data.owner + '/' + data.repo + ' failed to build <br><br>ERROR RESPONSE : ' + resultant[2], data.repo + ' - Error building site', data);
 
                     if (typeof cb === 'function') cb();
                     return;
