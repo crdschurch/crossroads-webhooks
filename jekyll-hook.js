@@ -69,7 +69,7 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
 		var resultant = err.split('$$'); // used to get the status code.
 		if (resultant[1] === '1') {
                     console.log('Failed to build: ' + data.owner + '/' + data.repo);
-	            send('Your website at ' + data.owner + '/' + data.repo + ' failed to build <br><br>ERROR RESPONSE : ' + resultant[2], data.repo + ' - Error building site', data);
+	            send('Your website at ' + data.owner + '/' + data.repo + ' failed to build <br><br>' + resultant[2], data.repo + ' - Error building site', data);
 
                     if (typeof cb === 'function') cb();
                     return;
