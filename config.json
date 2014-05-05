@@ -5,6 +5,7 @@
         "labs": "/var/www/labs"
     },
     "scripts": {
+	"inspect": "./scripts/inspect-jekyll.sh",
         "build": "./scripts/build.sh"
     },
     "email": {

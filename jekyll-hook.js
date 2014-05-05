@@ -61,25 +61,41 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
         /* owner  */ params.push(data.owner);
         /* giturl */ params.push('git@' + config.gh_server + ':' + data.owner + '/' + data.repo + '.git');
         /* source */ params.push(source);
+	/* giturlhttps*/ params.push('https://' + config.gh_server + '/' + data.owner + '/' + data.repo + '.git');
 
-        // Run build script
-        run(config.scripts.build, params, function(err) {
-            if (err) {
-                console.log('Failed to build: ' + data.owner + '/' + data.repo);
-                send('Your website at ' + data.owner + '/' + data.repo + ' failed to build. There was a local change on the server that was overwritten in the latest deploy. You may need to investigate this change.', data.repo + ' - Error building site', data);
 
-                if (typeof cb === 'function') cb();
-                return;
-            }
+	// Run inspect jekyll script which check jekyll build failures, which doesn't allow to pull unless it is resolved.
+	runjekyll(config.scripts.inspect, params, function(err){
+		var resultant = err.split('$$'); // used to get the status code.
+		if (result[1] === '1') {
+                    console.log('Failed to build: ' + data.owner + '/' + data.repo);
+	            send('Your website at ' + data.owner + '/' + data.repo + ' failed to build :--' + result[2], data.repo + ' - Error building site', data);
 
-            // Done running scripts
-            console.log('Successfully rendered: ' + data.owner + '/' + data.repo);
-            send('Your website at ' + data.owner + '/' + data.repo + ' was succesfully published.', data.repo + ' - Succesfully published', data);
+                    if (typeof cb === 'function') cb();
+                    return;
+		
+		} else {
+			// Run build script
+			run(config.scripts.build, params, function(err) {
+	                if (err) {
+		                console.log('Failed to build: ' + data.owner + '/' + data.repo);
+                		send('Your website at ' + data.owner + '/' + data.repo + ' failed to build.', data.repo + ' - Error building site', data);
 
-            if (typeof cb === 'function') cb();
-            return;
+	                if (typeof cb === 'function') cb();
+        		        return;
+	                }
 
-        });
+	            // Done running scripts
+        	    console.log('Successfully rendered: ' + data.owner + '/' + data.repo);
+	            send('Your website at ' + data.owner + '/' + data.repo + ' was succesfully published.', data.repo + ' - Succesfully published', data);
+
+        	    if (typeof cb === 'function') cb();
+	            return;
+
+       		    });
+	
+	       }
+	});
     }, req, res);
 
 });
@@ -88,6 +104,28 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
 var port = process.env.PORT || 4000;
 app.listen(port);
 console.log('Listening on port ' + port);
+
+function runjekyll(file, params, cb) {
+    var process = spawn(file, params);
+    var errData = '';
+
+    process.stdout.on('data', function (data) {
+        console.log('' + data);
+    });
+
+    process.stderr.on('data', function (data) {
+        errData += data.toString();
+        console.warn('' + data);
+    });
+
+    process.on('exit', function (code) {
+        if (typeof cb === 'function') {
+                var message = "CODE$$"+code+"$$"+errData; // $$ is used as a delimited for splitting purpose.
+                cb(message);
+         }
+    });
+}
+
 
 function run(file, params, cb) {
     var process = spawn(file, params);
