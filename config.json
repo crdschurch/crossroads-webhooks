@@ -1,8 +1,14 @@
 {
     "gh_server": "github.com",
     "env" : {
-        "milacron" : "/var/www/milacron",
-        "labs": "/var/www/labs"
+        "milacron" : {
+		"location" : "/var/www/milacron",
+		"type" : "jekyll"
+	},
+        "labs": { 
+		"location" : "/var/www/labs",
+		"type" : "jekyll"
+	}
     },
     "scripts": {
 	"inspect": "./scripts/inspect-jekyll.sh",

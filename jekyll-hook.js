@@ -46,7 +46,8 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
             return;
         }
 
-        var source = config.env[repo];
+        var source = config.env[repo]['location'];
+	var type = config.env[repo]['type'];
 
         // End early if not permitted branch
         if (data.branch !== branch) {
@@ -63,9 +64,10 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
         /* source */ params.push(source);
 	/* giturlhttps*/ params.push('https://' + config.gh_server + '/' + data.owner + '/' + data.repo + '.git');
 
-
+	// This configuration builds the jekyll site. Check if the location type is of jekyll before proceeding
+	if (type === 'jekyll') {
 	// Run inspect jekyll script which check jekyll build failures, which doesn't allow to pull unless it is resolved.
-	runjekyll(config.scripts.inspect, params, function(err){
+	    runjekyll(config.scripts.inspect, params, function(err){
 		var resultant = err.split('$$'); // used to get the status code.
 		if (resultant[1] === '1') {
                     console.log('Failed to build: ' + data.owner + '/' + data.repo);
@@ -95,7 +97,8 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
        		    });
 	
 	       }
-	});
+	    });
+	} // Else run your own script to match up the needs.
     }, req, res);
 
 });
