@@ -16,6 +16,9 @@ build=$6
 cd $source
 git checkout $branch
 git pull origin $branch
+
+# Git submodules checkout appropriate branch, pulls all submodules
+git submodule foreach --recursive git pull origin $branch
 cd -
 
 # Run jekyll
