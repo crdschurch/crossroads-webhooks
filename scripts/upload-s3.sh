@@ -15,16 +15,8 @@ giturlhttps=$6
 build=$7
 aa=$8
 
-if [ -d "./scripts/temp" ]; then
- echo " Temp directory exists hence deleting it " 
- rm -rf ./scripts/temp/
-fi
-
-mkdir ./scripts/tempfors3
-cd ./scripts/tempfors3/
-
-git clone $giturlhttps
-cd $1
+cd /var/www/milacron
+git pull
 
 files=$(shopt -s nullglob; echo app/img/*)
 

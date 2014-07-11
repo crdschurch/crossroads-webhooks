@@ -32,7 +32,7 @@ app.post('/hooks/upload-to-s3/', function(req, res) {
         params.push(source);
         params.push('https://' + config.gh_server + '/' + data.owner + '/' + data.repo + '.git');
 
- 
+
         run(config.scripts.upload-s3, params, function(err) {
             if (err) {
                 console.log(' Failed to build ' + err);
