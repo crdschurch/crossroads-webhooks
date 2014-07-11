@@ -28,7 +28,7 @@ app.post('/hooks/upload-to-s3/:repository', function(req, res) {
         data.branch = data.ref.split('/')[2];
         data.owner = data.repository.owner.name;
         var repo = req.params.repository;
-        
+
         var source = config.env[repo]['location'];
         var type = config.env[repo]['type'];
 
@@ -40,7 +40,7 @@ app.post('/hooks/upload-to-s3/:repository', function(req, res) {
         params.push(source);
         params.push('https://' + config.gh_server + '/' + data.owner + '/' + data.repo + '.git');
 
-        run(config.scripts.upload-s3, params, function(err) {
+        run(config.scripts.uploadToS3, params, function(err) {
             if (err) {
                 console.log(' Failed to upload to S3 ' + err);
                 send(' Error uploading images to s3 ', err);

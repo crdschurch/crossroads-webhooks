@@ -13,7 +13,7 @@
     "scripts": {
 	    "inspect": "./scripts/inspect-jekyll.sh",
           "build": "./scripts/build.sh",
-          "upload-s3": "./scripts/upload-s3.sh"
+          "uploadToS3": "./scripts/upload-s3.sh"
     },
     "email": {
 	"user": "cradmin@crossroads.net",
