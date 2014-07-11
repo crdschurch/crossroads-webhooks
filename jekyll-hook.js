@@ -30,7 +30,7 @@ app.post('/hooks/upload-to-s3/:repository', function(req, res) {
 
         var source = config.env[repo]['location'];
         var type = config.env[repo]['type'];
-
+        var repo = req.params.repository;
         // Process webhook data into params for scripts
         params.push(data.repo);
         params.push(data.branch);
