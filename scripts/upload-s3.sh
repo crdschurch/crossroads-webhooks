@@ -19,8 +19,7 @@ files=$(shopt -s nullglob; echo app/img/*)
 if (( ${#files} ))
 then
   echo "contains some new files need to move to S3"
-  aws s3 cp app/img/ s3://crossroads-media/images/ --recursive --acl public-read
-  cd app/img/
+  aws s3 cp app/img/*.* s3://crossroads-media/images/ --recursive --acl public-read
   rm app/img/*.*
   git commit -m "Webhook removed images to S3" app/img/
   git push origin master
