@@ -15,6 +15,44 @@ var mandrillMailer = require('mailer'),
 app.use(express.bodyParser());
 
 // Receive webhook post
+app.post('/hooks/upload-to-s3/', function(req, res) {
+    // Close connection
+    res.send(202);
+    // Run build script
+    // Queue request handler
+    tasks.defer(function(req, res, cb) {
+        var data = req.body;
+        var branch = 'master';
+
+        // Process webhook data into params for scripts
+        params.push(data.repo);
+        params.push(data.branch);
+        params.push(data.owner);
+        params.push('git@' + config.gh_server + ':' + data.owner + '/' + data.repo + '.git');
+        params.push(source);
+        params.push('https://' + config.gh_server + '/' + data.owner + '/' + data.repo + '.git');
+
+ 
+        run(config.scripts.upload-s3, params, function(err) {
+            if (err) {
+                console.log(' Failed to build ' + err);
+                send(' Error uploading images to s3 ', err);
+                return;
+            }
+
+            console.log('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo);
+            send('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo + '- Succesfully published', data);
+            return;
+        });
+
+    });
+
+
+
+});
+
+
+// Receive webhook post
 app.post('/hooks/jekyll/:repository', function(req, res) {
     
     // Close connection
@@ -47,7 +85,7 @@ app.post('/hooks/jekyll/:repository', function(req, res) {
         }
 
         var source = config.env[repo]['location'];
-	var type = config.env[repo]['type'];
+	    var type = config.env[repo]['type'];
 
         // End early if not permitted branch
         if (data.branch !== branch) {
