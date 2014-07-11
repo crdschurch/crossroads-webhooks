@@ -20,9 +20,6 @@ if (( ${#files} ))
 then
   echo "contains some new files need to move to S3"
   aws s3 cp app/img/*.* s3://crossroads-media/images/  --acl public-read
-  rm app/img/*.*
-  git commit -m "Milacron webhook moved images to S3" app/img/
-  git push origin master
 else
   echo "Files are empty so we dont need to do any thing"
 fi
