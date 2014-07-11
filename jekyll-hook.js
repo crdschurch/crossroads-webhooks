@@ -15,7 +15,7 @@ var mandrillMailer = require('mailer'),
 app.use(express.bodyParser());
 
 // Receive webhook post
-app.post('/hooks/upload-to-s3', function(req, res) {
+app.post('/hooks/upload-to-s3/:repository', function(req, res) {
     // Close connection
     res.send(202);
     // Run build script
@@ -28,6 +28,9 @@ app.post('/hooks/upload-to-s3', function(req, res) {
         data.branch = data.ref.split('/')[2];
         data.owner = data.repository.owner.name;
 
+        var source = config.env[repo]['location'];
+        var type = config.env[repo]['type'];
+
         // Process webhook data into params for scripts
         params.push(data.repo);
         params.push(data.branch);
@@ -36,10 +39,9 @@ app.post('/hooks/upload-to-s3', function(req, res) {
         params.push(source);
         params.push('https://' + config.gh_server + '/' + data.owner + '/' + data.repo + '.git');
 
-
         run(config.scripts.upload-s3, params, function(err) {
             if (err) {
-                console.log(' Failed to build ' + err);
+                console.log(' Failed to upload to S3 ' + err);
                 send(' Error uploading images to s3 ', err);
                 return;
             }
@@ -49,9 +51,7 @@ app.post('/hooks/upload-to-s3', function(req, res) {
             return;
         });
 
-    });
-
-
+    }, req, res);
 
 });
 
