@@ -40,17 +40,24 @@ app.post('/hooks/upload-to-s3/:repository', function(req, res) {
         params.push(source);
         params.push('https://' + config.gh_server + '/' + data.owner + '/' + data.repo + '.git');
 
-        run(config.scripts.uploadToS3, params, function(err) {
-            if (err) {
-                console.log(' Failed to upload to S3 ' + err);
-                send(' Error uploading images to s3 ', err);
-                return;
-            }
+        var checkForImageAdd = req.body.head_commit.added[0];
+        // We just need to send mail and upload only when image is added to img folder
+        if(checkForImageAdd.indexOf('app/img/') > -1) {
+            run(config.scripts.uploadToS3, params, function(err) {
+                if (err) {
+                    console.log(' Failed to upload to S3 ' + err);
+                    send('Failed to upload images to s3: ' + data.owner + '/' + data.repo + '- Failed to update' + err, data.repo + ' - Failed to upload images to S3', data);
+                    return;
+                }
 
-            console.log('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo);
-            send('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo + '- Succesfully updated', data.repo + ' - Succesfully uploaded to S3', data);
-            return;
-        });
+                console.log('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo);
+                send('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo + '- Succesfully updated', data.repo + ' - Succesfully uploaded to S3', data);
+                return;
+            });
+        } else {
+            console.log(" Since images are not added so no need to upload to S3");
+        }
+
 
     }, req, res);
 
