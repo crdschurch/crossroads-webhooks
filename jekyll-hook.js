@@ -24,6 +24,10 @@ app.post('/hooks/upload-to-s3', function(req, res) {
         var data = req.body;
         var branch = 'master';
         var params = [];
+        data.repo = data.repository.name;
+        data.branch = data.ref.split('/')[2];
+        data.owner = data.repository.owner.name;
+
         // Process webhook data into params for scripts
         params.push(data.repo);
         params.push(data.branch);

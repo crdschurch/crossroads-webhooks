@@ -6,15 +6,6 @@ set -e
 # as part of the jekyll-hook application.
 # https://github.com/developmentseed/jekyll-hook
 
-repo=$1
-branch=$2
-owner=$3
-giturl=$4
-source=$5
-giturlhttps=$6
-build=$7
-aa=$8
-
 cd /var/www/milacron
 git pull
 
