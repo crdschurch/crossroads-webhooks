@@ -15,7 +15,7 @@ var mandrillMailer = require('mailer'),
 app.use(express.bodyParser());
 
 // Receive webhook post
-app.post('/hooks/upload-to-s3/', function(req, res) {
+app.post('/hooks/upload-to-s3', function(req, res) {
     // Close connection
     res.send(202);
     // Run build script
@@ -23,7 +23,7 @@ app.post('/hooks/upload-to-s3/', function(req, res) {
     tasks.defer(function(req, res, cb) {
         var data = req.body;
         var branch = 'master';
-
+        var params = [];
         // Process webhook data into params for scripts
         params.push(data.repo);
         params.push(data.branch);
