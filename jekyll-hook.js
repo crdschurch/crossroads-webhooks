@@ -48,7 +48,7 @@ app.post('/hooks/upload-to-s3/:repository', function(req, res) {
             }
 
             console.log('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo);
-            send('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo + '- Succesfully published', data);
+            send('Successfully uploaded images to s3: ' + data.owner + '/' + data.repo + '- Succesfully published', data.repo + ' - Succesfully published', data);
             return;
         });
 
